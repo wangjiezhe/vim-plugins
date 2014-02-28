@@ -2,13 +2,13 @@
 §  User Macros
 § ==========================================================
 
-SetMacro( 'AUTHOR',      'Dr. Fritz mehner' )
-SetMacro( 'AUTHORREF',   'fgm' )
+SetMacro( 'AUTHOR',      'wangjiezhe' )
+SetMacro( 'AUTHORREF',   '' )
 SetMacro( 'COMPANY',     '' )
 SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
-SetMacro( 'EMAIL',       'mehner.fritz@fh-swf.de' )
+SetMacro( 'EMAIL',       'wangjiezhe@gmail.com' )
 SetMacro( 'LICENSE',     'GNU General Public License' )
-SetMacro( 'ORGANIZATION','FH Südwestfalen, Iserlohn' )
+SetMacro( 'ORGANIZATION','' )
 
 SetStyle( 'C' )
 

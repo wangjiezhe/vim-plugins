@@ -1,6 +1,6 @@
 == Statements.do while == map:sd, shortcut:d  ==
 do {
-<SPLIT>} while ( <CURSOR> );				/* -----  end do-while  ----- */
+<SPLIT>} while ( <CURSOR> );
 == Statements.for == map:sf, shortcut:o  ==
 for ( <CURSOR>; ; )
 §
@@ -10,7 +10,7 @@ for ( <CURSOR>; ; )
 == Statements.for block == map:sfo, shortcut:r  ==
 |DefaultMacro( 'CONDITION', '{+CONDITION+}' )|
 |DefaultMacro( 'INCREMENT', '{+INCREMENT+}' )|
-for ( |INIT|<CURSOR>; |CONDITION|; |INCREMENT| ) {
+for ( |INIT|<CURSOR>; ; ) {
 <SPLIT>}
 == Statements.range-based for == map:sfr, shortcut:a  ==
 for ( <CURSOR>: <-EXPRESSION-> ){

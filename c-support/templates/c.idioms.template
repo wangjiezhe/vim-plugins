@@ -1,49 +1,23 @@
 == Idioms.function == map:if, shortcut:f  ==
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  |?FUNCTION_NAME|
- *  Description:  
- * =====================================================================================
- */
-void<CURSOR>
-|FUNCTION_NAME| ( <+argument_list+> )
-{
-<SPLIT>	return <+return_value+>;
-}		/* -----  end of function |FUNCTION_NAME|  ----- */
+|?FORMAT| |?FUNCTION_NAME| ( <CURSOR> ) {
+<SPLIT>
+}
 == Idioms.function-static == map:isf, shortcut:t  ==
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  |?FUNCTION_NAME|
- *  Description:  
- * =====================================================================================
- */
-static void<CURSOR>
-|FUNCTION_NAME| ( <+argument_list+> )
-{
-<SPLIT>	return <+return_value+>;
-}		/* -----  end of static function |FUNCTION_NAME|  ----- */
+static |?FORMAT| |?FUNCTION_NAME| ( <CURSOR> ) {
+<SPLIT>
+}
 == Idioms.main == map:im, shortcut:m  ==
-#include	<stdlib.h>
-
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  main
- *  Description:  
- * =====================================================================================
- */
-int
-main ( int argc, char *argv[] )
-{<CURSOR>
-<SPLIT>	return EXIT_SUCCESS;
-}				/* ----------  end of function main  ---------- */
+int main ( int argc, char *argv[] ) {<CURSOR>
+<SPLIT>	return 0;
+}
 == Idioms.enum == map:ie, shortcut:e  ==
 enum |?ENUM_NAME| {<CURSOR>
-<SPLIT>};				/* ----------  end of enum |ENUM_NAME|  ---------- */
+<SPLIT>};
 
 typedef enum |ENUM_NAME| |ENUM_NAME:c|;
 == Idioms.struct == map:is, shortcut:s  ==
 struct |?STRUCT_NAME| {<CURSOR>
-<SPLIT>};				/* ----------  end of struct |STRUCT_NAME|  ---------- */
+<SPLIT>};
 
 typedef struct |STRUCT_NAME| |STRUCT_NAME:c|;
 == Idioms.union == map:iu, shortcut:u  ==

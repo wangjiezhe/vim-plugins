@@ -43,52 +43,52 @@
 #include "<CURSOR>"
 §-------------------------------------------------------------------------
 == Preprocessor.define == map:pd, shortcut:d, insert ==
-#define	<CURSOR>			/*  */
+#define	<CURSOR>
 §-------------------------------------------------------------------------
 == Preprocessor.undefine == map:pu, shortcut:u, insert ==
-#undef	<CURSOR>			/*  */
+#undef	<CURSOR>
 §-------------------------------------------------------------------------
 == Preprocessor.if-endif == map:pif, shortcut:i ==
 #if  |?CONDITION:u|
 <CURSOR><SPLIT>
-#endif     /* -----  |CONDITION|  ----- */
+#endif
 §-------------------------------------------------------------------------
 == Preprocessor.if-else-endif == map:pie, shortcut:i ==
 #if  |?CONDITION:u|
 <CURSOR><SPLIT>
-#else      /* -----  not |CONDITION|  ----- */
+#else
 <+ELSE PART+>
-#endif     /* -----  not |CONDITION|  ----- */
+#endif
 §-------------------------------------------------------------------------
 == Preprocessor.ifdef-else-endif == map:pid, shortcut:f ==
 #ifdef  |?CONDITION:u|
 <CURSOR><SPLIT>
-#else      /* -----  not |CONDITION|  ----- */
+#else
 <+ELSE PART+>
-#endif     /* -----  not |CONDITION|  ----- */
+#endif
 §-------------------------------------------------------------------------
 == Preprocessor.ifndef-else-endif == map:pin, shortcut:n ==
 #ifndef  |?CONDITION:u|
 <CURSOR><SPLIT>
-#else      /* -----  not |CONDITION|  ----- */
+#else
 <+ELSE PART+>
-#endif     /* -----  not |CONDITION|  ----- */
+#endif
 §-------------------------------------------------------------------------
 == Preprocessor.ifndef-def-endif == map:pind, shortcut:e ==
 #ifndef  |?BASENAME:L|_INC
 #define  |BASENAME|_INC
 <CURSOR><SPLIT>
-#endif   /* ----- #ifndef |BASENAME|_INC  ----- */
+#endif
 §-------------------------------------------------------------------------
 == Preprocessor.error == map:pe, shortcut:o ==
-#error	"<CURSOR>"			/*  */
+#error	"<CURSOR>"
 §-------------------------------------------------------------------------
 == Preprocessor.line == map:pli, shortcut:l ==
-#line	<CURSOR>			/*  */
+#line	<CURSOR>
 §-------------------------------------------------------------------------
 == Preprocessor.pragma == map:pp, shortcut:p ==
-#pragma	<CURSOR>			/*  */
+#pragma	<CURSOR>
 §-------------------------------------------------------------------------
 == Preprocessor.warning == map:pw, shortcut:w ==
-#warning	<CURSOR>			/*  */
+#warning	<CURSOR>
 §-------------------------------------------------------------------------
