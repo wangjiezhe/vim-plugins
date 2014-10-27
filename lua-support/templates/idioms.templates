@@ -153,18 +153,18 @@ end
 == SEP: Idioms.sep_file ==
 
 == Idioms.open file == below, map:iof, sc:o ==
-local	|?FILE_HANDLE| = assert ( io.open ( <CURSOR>, '{+MODE+}' ) )
+local |?FILE_HANDLE| = assert ( io.open ( <CURSOR>, '{+MODE+}' ) )
 
 assert ( io.close ( |FILE_HANDLE| ) )
 == Idioms.open tmp-file == below, map:iot ==
 local |?TMPFILE_NAME| = assert ( os.tmpname (), 'could not open a temporary file' )
-local	|?FILE_HANDLE| = assert ( io.open ( <CURSOR>|TMPFILE_NAME|, '{+MODE+}' ) )
+local |?FILE_HANDLE| = assert ( io.open ( <CURSOR>|TMPFILE_NAME|, '{+MODE+}' ) )
 
 assert ( io.close ( |FILE_HANDLE| ) )
 
 assert ( os.remove ( |TMPFILE_NAME| ) )
 == Idioms.open pipe == below, map:iop ==
-local	|?FILE_HANDLE| = assert ( io.popen ( <CURSOR>, '{+MODE+}' ) )
+local |?FILE_HANDLE| = assert ( io.popen ( <CURSOR>, '{+MODE+}' ) )
 
 assert ( io.close ( |FILE_HANDLE| ) )
 == ENDTEMPLATE ==
@@ -177,5 +177,7 @@ assert ( io.close ( |FILE_HANDLE| ) )
 
 == Idioms.add to path == below, map:ip, sc:p ==
 package.path = package.path .. ';<CURSOR>/?.lua'
+== Idioms.add to path, local modules == below, sc:p ==
+package.path = '<CURSOR>|LUA_LOCAL_MODULES|/?.lua;' .. package.path
 == ENDTEMPLATE ==
 
