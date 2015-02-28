@@ -18,7 +18,6 @@
 #===============================================================================
 
 plugin='perl-support'
-MainTemplateFile='./templates/Templates'
 
 filelist="
  ./${plugin}/README.perlsupport
@@ -32,7 +31,7 @@ filelist="
  ./${plugin}/scripts/*
  ./${plugin}/templates/*
  ./${plugin}/wordlists/*
- ./autoload/mmtemplates/core.vim
+ ./autoload/mmtemplates/*.vim
  ./autoload/mmtoolbox/make.vim
  ./autoload/mmtoolbox/tools.vim
  ./autoload/perlsupportprofiling.vim
@@ -56,9 +55,7 @@ cd ..
 
 rm --force "${plugin}.zip"
 
-zip -r "${plugin}" ${filelist} -x *.save
+zip -r "${plugin}" ${filelist}
 
 cd -
-
-mv "${MainTemplateFile}".save "${MainTemplateFile}"
 

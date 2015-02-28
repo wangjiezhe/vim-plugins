@@ -1,7 +1,8 @@
+#!/usr/bin/env lua
 --
 --------------------------------------------------------------------------------
 --         FILE:  release.lua
---        USAGE:  lua lua-support/release.lua <mode> [<options>]
+--        USAGE:  lua perl-support/release.lua <mode> [<options>]
 --  DESCRIPTION:  Run from the project's top-level directory.
 --      OPTIONS:  The mode is either "check", "zip", "cp-repo" or "help".
 -- REQUIREMENTS:  ---
@@ -10,8 +11,8 @@
 --       AUTHOR:  Wolfgang Mehner, <wolfgang-mehner@web.de>
 --      COMPANY:  
 --      VERSION:  1.0
---      CREATED:  14.09.11
---     REVISION:  01.03.14
+--      CREATED:  18.02.2015
+--     REVISION:  ---
 --------------------------------------------------------------------------------
 --
 
@@ -21,29 +22,42 @@ end  ----------  end of function escape_shell  ----------
 
 local args = { ... }
 
-local outfile = 'lua-support.zip'
+local outfile = 'perl-support.zip'
 
+-- files for the zip-archive
 local filelist = {
 	'autoload/mmtemplates/',
 	'autoload/mmtoolbox/make.vim',
 	'autoload/mmtoolbox/tools.vim',
-	'doc/luasupport.txt',
+	'autoload/perlsupportprofiling.vim',
+	'autoload/perlsupportregex.vim',
+	'doc/perlsupport.txt',
 	'doc/templatesupport.txt',
 	'doc/toolbox.txt',
 	'doc/toolboxmake.txt',
-	'ftplugin/lua.vim',
-	'plugin/lua-support.vim',
+	'ftplugin/make.vim',
+	'ftplugin/perl.vim',
+	'ftplugin/pod.vim',
+	'ftplugin/qf.vim',
+	'plugin/perl-support.vim',
 	'syntax/template.vim',
-	'lua-support/codesnippets/',
-	'lua-support/doc/',
-	'lua-support/rc/',
-	'lua-support/templates/',
-	'lua-support/README.md',
+	'perl-support/codesnippets/',
+	'perl-support/doc/ChangeLog',
+	'perl-support/doc/perl-hot-keys.pdf',
+	'perl-support/doc/perl-hot-keys.tex',
+	'perl-support/doc/pmdesc3.text',
+	'perl-support/modules/',
+	'perl-support/rc/',
+	'perl-support/scripts/',
+	'perl-support/templates/',
+	'perl-support/wordlists/',
+	'perl-support/README.md',
 }
+-- :TODO:18.02.2015 10:27:WM: change to README.md
 
+-- additional files for the stand-alone repository
 local filelist_repo = {
-	'lua-support/lua-doc/',
-	'lua-support/release.lua',
+	'perl-support/release.lua',
 }
 
 outfile = escape_shell ( outfile )
@@ -110,7 +124,7 @@ elseif args[1] == 'cp-repo' then
 		local success, res_reason, res_status = os.execute ( cmd )
 
 		if success then
-			cmd = 'cat lua-support/README.standalone.md lua-support/README.md > '..args[2]..'/README.md'
+			cmd = 'cat perl-support/README.standalone.md perl-support/README.md > '..args[2]..'/README.md'
 
 			success, res_reason, res_status = os.execute ( cmd )
 		end

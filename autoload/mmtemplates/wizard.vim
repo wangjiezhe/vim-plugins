@@ -12,7 +12,7 @@
 "       Version:  1.0
 "       Created:  01.12.2014
 "      Revision:  ---
-"       License:  Copyright (c) 2014, Wolfgang Mehner
+"       License:  Copyright (c) 2014-2015, Wolfgang Mehner
 "                 This program is free software; you can redistribute it and/or
 "                 modify it under the terms of the GNU General Public License as
 "                 published by the Free Software Foundation, version 2 of the
@@ -339,12 +339,21 @@ function! s:SetupPersonal ( library )
 					\ ."\n    :help g:Templates_PersonalizationFile"
 	elseif ! filereadable ( personal_file )
 		" automatic setup failed
-		help g:Templates_PersonalizationFile
+		let help_topic_missing = 0
+		try
+			help g:Templates_PersonalizationFile
+		catch /.*/   " failed, print some more help below
+			let help_topic_missing = 1
+		endtry
 		redraw
 		echo "Failed to create the personalization file:"
 					\ ."\n    ".personal_file
 					\ ."\nFor configuring the file manually, see:"
 					\ ."\n    :help g:Templates_PersonalizationFile"
+		if help_topic_missing
+			echo "... but redo your helptags first:"
+						\ ."\n    :helptags .../doc"
+		endif
 	else
 		call mmtemplates#core#EnableTemplateFile ( t_lib, 'personal' )
 		"

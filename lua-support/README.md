@@ -1,4 +1,4 @@
-README for lua-support.vim (Version 1.0pre) / Nov 20 2014
+README for lua-support.vim (Version 1.0pre) / Jan 28 2015
 ================================================================================
 
   *  INSTALLATION
@@ -17,7 +17,7 @@ functions.
 Please read the documentation.
 This plug-in can be used with Vim version 7.x .
 
-Lua is: Copyright 1994–2014 Lua.org, PUC-Rio.
+Lua is: Copyright 1994-2015 Lua.org, PUC-Rio.
 
 
 --------------------------------------------------------------------------------
@@ -49,6 +49,12 @@ structure which is needed below the local installation directory
 
       unzip lua-support.zip
 
+   Afterwards, these files should exist:
+
+      $HOME/.vim/autoload/mmtemplates/...
+      $HOME/.vim/doc/...
+      $HOME/.vim/plugin/lua-support.vim
+
 (1.2) Loading of plug-in files must be enabled. If not use
 
       :filetype plugin on
@@ -56,17 +62,23 @@ structure which is needed below the local installation directory
    This is the minimal content of the file '$HOME/.vimrc'. Create one if there
    is none or use the file in $HOME/.vim/lua-support/rc as a starting point.
 
-(1.3) Set at least some personal details in the file
+(1.3) Set at least some personal details. Use the map \ntw inside a Lua buffer
+   or the menu entry:
 
-      '$HOME/.vim/lua-support/templates/Templates'
+      Lua -> Snippets -> template setup wizard
 
-   Here is the minimal personalization (my settings as an example):
+   It will help you set up the file <runtimepath>/templates/personal.templates .
+   The file is read by all plug-ins supporting this feature to get your personal
+   details. Here is the minimal personalization (my settings as an example):
 
        SetMacro( 'AUTHOR',       'Wolfgang Mehner' )
        SetMacro( 'AUTHORREF',    'WM' )
        SetMacro( 'EMAIL',        'wolfgang-mehner@web.de' )
        SetMacro( 'ORGANIZATION', '' )
        SetMacro( 'COPYRIGHT',    'Copyright (c) |YEAR|, |AUTHOR|' )
+
+   Use the file $HOME/.vim/templates/lua.templates to customize or add to your
+   Lua template library. It can also be set up via the wizard.
 
    (Read more about the template system in the plug-in documentation)
 
@@ -97,6 +109,12 @@ structure which is needed below the local installation directory
 
       unzip lua-support.zip
 
+   Afterwards, these files should exist:
+
+      $HOME/vimfiles/autoload/mmtemplates/...
+      $HOME/vimfiles/doc/...
+      $HOME/vimfiles/plugin/lua-support.vim
+
 (2.2) Loading of plug-in files must be enabled. If not use
 
       :filetype plugin on
@@ -105,17 +123,23 @@ structure which is needed below the local installation directory
    is none or use the file in $HOME/vimfiles/lua-support/rc as a starting
    point.
 
-(2.3) Set at least some personal details in the file
+(2.3) Set at least some personal details. Use the map \ntw inside a Lua buffer
+   or the menu entry:
 
-      '$HOME/vimfiles/lua-support/templates/Templates'
+      Lua -> Snippets -> template setup wizard
 
-   Here is the minimal personalization (my settings as an example):
+   It will help you set up the file <runtimepath>/templates/personal.templates .
+   The file is read by all plug-ins supporting this feature to get your personal
+   details. Here is the minimal personalization (my settings as an example):
 
        SetMacro( 'AUTHOR',       'Wolfgang Mehner' )
        SetMacro( 'AUTHORREF',    'WM' )
        SetMacro( 'EMAIL',        'wolfgang-mehner@web.de' )
        SetMacro( 'ORGANIZATION', '' )
        SetMacro( 'COPYRIGHT',    'Copyright (c) |YEAR|, |AUTHOR|' )
+
+   Use the file $HOME/vimfiles/templates/lua.templates to customize or add to
+   your Lua template library. It can also be set up via the wizard.
 
    (Read more about the template system in the plug-in documentation)
 
@@ -162,6 +186,13 @@ Any problems? See the TROUBLESHOOTING section at the end of the help file
 
   RELEASE NOTES FOR VERSION 1.0pre
 ----------------------------------------------------------------------
+- Renamed 'g:Lua_GlbTemplateFile' into 'g:Lua_GlobalTemplateFile'.
+- Renamed 'g:Lua_LclTemplateFile' into 'g:Lua_LocalTemplateFile'.
+- Added optional custom templates (g:Lua_CustomTemplateFile).
+- Added optional additional templates (g:Lua_AdditionalTemplates).
+- Added template personalization file and setup wizard.
+- Added Lua's reference manual in Vim's help format.
+- Added maps and menu entries to jump to it conveniently.
 - New templates.
 - Minor improvements.
 
@@ -223,7 +254,7 @@ ___lua-support.vim will work without them:___
 
 ___The settings are explained in the files themselves.___
 
-    lua-support/rc/sample_template_file
+    lua-support/rc/personal.templates
                         Sample template file for personalization, when using a
                         system-wide installation.
 
