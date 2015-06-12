@@ -692,6 +692,58 @@ function! Lua_FunctionComment() range
 endfunction    " ----------  end of function Lua_FunctionComment  ----------
 "
 "-------------------------------------------------------------------------------
+" Lua_ModifyVariable : Modify a variable in the line.   {{{1
+"-------------------------------------------------------------------------------
+"
+function! Lua_ModifyVariable ( mode, ... )
+	"
+	let col  = getpos('.')[2]-1
+	let lstr = getline('.')
+	let head = lstr[ 0     : col ]
+	let tail = lstr[ col+1 : -1  ]
+	"
+	let [white,head] = matchlist ( head, '^\(\s*\)\(.*\)$' )[1:2]
+	let var = matchstr ( head, '^.*\S\ze\s\{-}$' )
+	"
+	if var == ''
+		return
+	endif
+	"
+	let res = ''
+	let setcol = -1
+	"
+	if a:mode == 'unary'
+		let operation = a:1
+		let res = var.' = '.operation.' '.var
+	elseif a:mode == 'binary'
+		let operation = a:1
+		let operant2  = a:2
+		let res = var.' = '.var.' '.operation.' '.operant2
+	elseif a:mode == 'function'
+		let func = a:1
+		if a:0 == 1
+			let res = var.' = '.func.' ( '.var.' )'
+		else
+			let param = a:2
+			let res = var.' = '.func.' ( '.var.', '.param.' )'
+		endif
+		let setcol = len ( white.res ) - 2
+	endif
+	"
+	if res != ''
+		call setline ( '.', white.res )
+		let curpos = getpos('.')
+		if setcol == -1
+			let curpos[2] = len ( white.res )
+		else
+			let curpos[2] = setcol
+		endif
+		call setpos ( '.', curpos )
+	endif
+	"
+endfunction    " ----------  end of function Lua_ModifyVariable  ----------
+"
+"-------------------------------------------------------------------------------
 " Lua_EscMagicChar : Automatically escape magic characters.   {{{1
 "-------------------------------------------------------------------------------
 "
@@ -985,9 +1037,9 @@ function! Lua_Run ( args )
 		"
 		setlocal modifiable
 		"
-		silent exe '%del'
+		silent exe '%delete _'
 		exe '0r!'.exec.' '.script.' '.a:args
-		silent exe '$del'
+		silent exe '$delete _'
 		"
 		if v:shell_error == 0
 			" jump to the first line of the output
@@ -1230,10 +1282,13 @@ function! s:SetupTemplates()
 	endif
 	"
 	" some metainfo
-	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Names::Plugin',   'Lua' )
-	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Names::Filetype', 'Lua' )
-	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::FileSkeleton::personal', s:plugin_dir.'/lua-support/rc/personal.templates' )
-	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::FileSkeleton::custom',   'TODO' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::PluginName',   'Lua' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::FiletypeName', 'Lua' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::FileCustomNoPersonal',   s:plugin_dir.'/lua-support/rc/custom.templates' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::FileCustomWithPersonal', s:plugin_dir.'/lua-support/rc/custom_with_personal.templates' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::FilePersonal',           s:plugin_dir.'/lua-support/rc/personal.templates' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::CustomFileVariable',     'g:Lua_CustomTemplateFile' )
+	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::Wizard::AddFileListVariable',    'g:Lua_AdditionalTemplates' )
 	"
 	" maps: special operations
 	call mmtemplates#core#Resource ( g:Lua_Templates, 'set', 'property', 'Templates::RereadTemplates::Map', 'ntr' )
