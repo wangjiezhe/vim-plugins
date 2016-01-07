@@ -1,4 +1,4 @@
-README for perl-support.vim (Version 5.4pre) / March 08 2015
+README for perl-support.vim (Version 5.4pre) / December 26 2015
 ================================================================================
 
   *  INSTALLATION
@@ -62,8 +62,7 @@ structure which is needed below the local installation directory $HOME/.vim/
 
        SetMacro( 'AUTHOR',      'Dr. Fritz Mehner' )
        SetMacro( 'AUTHORREF',   'fgm' )
-       SetMacro( 'EMAIL',       'mehner.fritz@fh-swf.de' )
-       SetMacro( 'ORGANIZATION','FH Südwestfalen, Iserlohn' )
+       SetMacro( 'EMAIL',       'mehner.fritz@web.de' )
        SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
 
    Use the file $HOME/.vim/templates/perl.templates to customize or add to your
@@ -120,8 +119,7 @@ $HOME/vimfiles/ (find the value of $HOME with ":echo $HOME" from inside Vim).
 
        SetMacro( 'AUTHOR',      'Dr. Fritz Mehner' )
        SetMacro( 'AUTHORREF',   'fgm' )
-       SetMacro( 'EMAIL',       'mehner.fritz@fh-swf.de' )
-       SetMacro( 'ORGANIZATION','FH Südwestfalen, Iserlohn' )
+       SetMacro( 'EMAIL',       'mehner.fritz@web.de' )
        SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
 
    Use the file $HOME/vimfiles/templates/perl.templates to customize or add to
@@ -178,7 +176,7 @@ For a system-wide installation please see the help file 'doc/perlsupport.txt'.
 ----------------------------------------------------------------------
 - Added 'g:Perl_CustomTemplateFile' and 'g:Perl_AdditionalTemplates'.
 - Added template personalization file and setup wizard.
-- Removed unused 'g:Perl_GuiTemplateBrowser'.
+- Removed unused 'g:Perl_GuiTemplateBrowser' and 'g:Perl_MenuHeader'.
 - New and reworked templates.
 - Changed map "\vs" -> "\vps", in favor of a more consistent naming scheme.
 - Minor changes.

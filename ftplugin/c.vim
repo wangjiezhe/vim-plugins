@@ -4,7 +4,8 @@
 "
 "   Language :  C
 "     Plugin :  c.vim 
-" Maintainer :  Fritz Mehner <mehner.fritz@fh-swf.de>
+" Maintainer :  Wolfgang Mehner <wolfgang-mehner@web.de>
+"               (formerly Fritz Mehner <mehner.fritz@web.de>)
 "
 " ------------------------------------------------------------------------------
 "
