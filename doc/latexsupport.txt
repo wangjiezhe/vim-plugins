@@ -1,11 +1,11 @@
-*latexsupport.txt*           LaTeX Support                         Dec 20 2015
+*latexsupport.txt*              LaTeX Support                      Mar 20 2016
 
 LaTeX Support                                     *latex-support* *latexsupport*
 
-                              Plugin version 1.2pre
+                             Plug-in version 1.2
                         for Vim version 7.0 and above
-                     Fritz Mehner  <mehner.fritz@web.de>
                    Wolfgang Mehner <wolfgang-mehner@web.de>
+                      Fritz Mehner <mehner.fritz@web.de>
 
 LaTeX-IDE for Vim/gVim. It is written to considerably speed up typesetting a
 document in a consistent style.  This is done by inserting complete
@@ -576,7 +576,7 @@ The following function keys are defined in normal, visual and insert mode:
 4.1  FILES                                         *latexsupport-custom-files*
 ------------------------------------------------------------------------------
 
-README.latexsupport               The starting point.
+README.md                         The starting point.
 
 autoload/mmtemplates/core         The template system plug-in.
 
@@ -638,7 +638,6 @@ Several global variables are checked after the plug-in has been loaded to custom
  g:Latex_PdfPng      'convert'
  g:Latex_PsPdf       'ps2pdf'
 
- g:Latex_AdditionalTemplates    []
  g:Latex_CustomTemplateFile     $HOME.'/.vim/templates/latex.templates'
  g:Latex_GlobalTemplateFile     $VIMRUNTIME.'/latex-support/templates/Templates'
  g:Latex_LocalTemplateFile      $HOME.'/.vim/latex-support/templates/Templates'
@@ -660,7 +659,6 @@ Several global variables are checked after the plug-in has been loaded to custom
  g:Latex_PdfPng      ''
  g:Latex_PsPdf       'ps2pdf.exe'
 
- g:Latex_AdditionalTemplates    []
  g:Latex_CustomTemplateFile     $HOME.'/vimfiles/templates/latex.templates'
  g:Latex_GlobalTemplateFile     $VIMRUNTIME.'/latex-support/templates/Templates'
  g:Latex_LocalTemplateFile      $HOME.'/vimfiles/latex-support/templates/Templates'
@@ -724,9 +722,6 @@ The command line used to call a PDF to Png converter.
 
  *g:Latex_PsPdf*
 The command line used to call a PS to PDF converter.
-
- *g:Latex_AdditionalTemplates*
-Sets additional template files.
 
  *g:Latex_CodeSnippets*
 The name of the (non-standard) code snippet directory (see below).
@@ -877,7 +872,7 @@ obtain personalized comments, e.g. something like this:
 Use the custom template file for LaTeX templates which override the global
 templates or to add new ones.
 
-The old system (before version 6.2), using a "local" template file, >
+The old system (before version 1.2), using a "local" template file, >
   ~/.vim/latex-support/templates
 is still supported for backwards compatibility.
 >
@@ -913,6 +908,13 @@ plug-ins which support this feature, so it should only contain basic
 information not pertaining to a specific programming language. It can be set
 up using a wizard, which is run by the map \ntw or the menu entry:
   LaTeX -> Snippets -> template setup wizard
+
+Further template files can be added using the call: >
+  call mmtemplates#config#Add ( 'latex', '<PATH>/some.templates', 'example', 'nte' )
+The first parameter adds the file to your LaTeX templates, the second is the
+path. The remaining two optional parameters specify the symbolic name for
+these templates and the map to edit them. The map is '\nte' in this example,
+if the standard mapleader is set.
 
 ------------------------------------------------------------------------------
 5.1  TEMPLATE FILES                             *latexsupport-templates-files*
@@ -1014,8 +1016,7 @@ need to have all user defined macros in the master file.
 5.2.1   USER DEFINED FORMATS FOR DATE AND TIME   *latexsupport-templates-date*
 ------------------------------------------------------------------------------
 The format for *|DATE|* ,*|TIME|* , and*|YEAR|* can be set by the user. The
-defaults are
-Example:
+defaults are:
 >
   |DATE|        '%x'
   |TIME|        '%X'
@@ -1118,7 +1119,7 @@ You can use Vim's dictionary feature CTRL-X, CTRL-K (and CTRL-P, CTRL-N).
 8.  RELEASE NOTES                                 *latexsupport-release-notes*
 ==============================================================================
 
-See files README.latexsupport and doc/ChangeLog.
+See files latex-support/README.md and doc/ChangeLog.
 
 ==============================================================================
 vim:tw=78:expandtab:ts=2:ft=help:norl:

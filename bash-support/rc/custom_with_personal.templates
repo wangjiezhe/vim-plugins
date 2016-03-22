@@ -29,6 +29,9 @@ SetMacro( 'LICENSE',      'GNU General Public License' )
 §  Custom Templates
 § =============================================================
 
+§ set the template style used after loading the library
+SetStyle( 'default' )
+
 § -------------------------------------------------------------
 §  A template definition is build like this:
 §    == Menu.some name == <options> ==
@@ -41,32 +44,29 @@ SetMacro( 'LICENSE',      'GNU General Public License' )
 § -------------------------------------------------------------
 
 § -------------------------------------------------------------
-§  Function Description
+§  Statements
 § -------------------------------------------------------------
 
 § uncomment and edit to customize
 
-§== Comments.function == map:cfu, sc:f ==
-§"===  FUNCTION  ================================================================
-§"          NAME:  |?FUNCTION_NAME|     {{{1
-§"   DESCRIPTION:  <CURSOR>
-§"    PARAMETERS:  -|PARAMETERS:EMPTY|
-§"    PARAMETERS:  |PARAMETERS:FIRST| - {+DESCRIPTION+}
-§"                 |PARAMETERS:ENTRY| - {+DESCRIPTION+}
-§"       RETURNS:  
-§"===============================================================================
+§== Statements.case == map:sc, shortcut:c  ==
+§case <CURSOR> in
+§	)
+§	;;
+§
+§	)
+§	;;
+§
+§	*)
+§	;;
+§
+§esac    # --- end of case ---
 §== ENDTEMPLATE ==
 
-§ -------------------------------------------------------------
-§  Function Definition
-§ -------------------------------------------------------------
-
-§ uncomment and edit to customize
-
-§== Idioms.function == map:if, sc:f ==
-§function! |?FUNCTION_NAME| (<CURSOR>)
-§	<SPLIT><-FUNCTION_BODY->
-§	return
-§endfunction    " ----------  end of function |FUNCTION_NAME|  ----------
+§== Statements.function == map:sfu, shortcut:f  ==
+§|?FUNCTION_NAME| ()
+§{
+§<CURSOR><SPLIT>
+§}	# ----------  end of function |FUNCTION_NAME|  ----------
 §== ENDTEMPLATE ==
 

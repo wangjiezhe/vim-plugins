@@ -1,10 +1,11 @@
-*vimsupport.txt*                Vim Support                     Aug 13 2015
+*vimsupport.txt*                 Vim Support                       Mar 17 2016
 
 Vim Support                                         *vim-support* *vimsupport*
-                              Plugin version 2.4pre
+
+                             Plug-in version 2.4
                         for Vim version 7.0 and above
-                  Fritz Mehner  <mehner.fritz at web.de>
-                Wolfgang Mehner  <wolfgang-mehner at web.de>
+                   Wolfgang Mehner <wolfgang-mehner@web.de>
+                      Fritz Mehner <mehner.fritz@web.de>
 
 Vim Support implements a Vim-IDE for Vim/gVim. It is written to considerably
 speed up writing Vim script code in a consistent style.  This is done by
@@ -124,7 +125,7 @@ n\cj.
 
 The comment sign " can be set or removed at the beginning of the current line
 or for a marked block using the menu items 'comment' (or \cc) and 'uncomment'
-(or \cu).  A single line needs not to be marked (normal mode, insert mode).
+(or \co). A single line needs not to be marked (normal mode, insert mode).
 
 A marked block
 
@@ -440,7 +441,7 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
   [n]\cj     adjust end-of-line comments     (n, i, v)
      \cs     set end-of-line comment column  (n)
   [n]\cc     comment code                    (n, i, v)
-  [n]\cu     uncomment code                  (n, i, v)
+  [n]\co     uncomment code                  (n, i, v)
      \ca     function description (auto)     (n, i, v)
      \cfr    frame comment                   (n, i)
      \cfu    function description            (n, i)
@@ -583,7 +584,6 @@ Global Variable             Default Value
 g:Vim_CreateMapsForHelp     'no'
 g:Vim_GlobalTemplateFile    $VIM.'/vimfiles/vim-support/templates/Templates'
 g:Vim_LocalTemplateFile     $HOME.'/.vim/vim-support/templates/Templates'
-g:Vim_AdditionalTemplates   []
 g:Vim_CustomTemplateFile    $HOME.'/.vim/templates/vim.templates'
 g:Vim_CodeSnippets          $HOME.'/.vim/vim-support/codesnippets' (Linux/U**X)
                             $VIM.'\vimfiles\vim-support/codesnippets/'(Windows)
@@ -602,7 +602,6 @@ Global Variable             Description
 g:Vim_CreateMapsForHelp     Create maps for modifiable help buffers ("yes", "no").
 g:Vim_GlobalTemplateFile    sets the global template file (see|vimsupport-templates|)
 g:Vim_LocalTemplateFile     sets the local template file (see|vimsupport-templates|)
-g:Vim_AdditionalTemplates   sets additional template files (see|vimsupport-templates|)
 g:Vim_CustomTemplateFile    sets the custom template file (see|vimsupport-templates|)
 g:Vim_CodeSnippets          set the personal code snippet directory
 g:Vim_LoadMenus             Load menus and mappings ("yes", "no") at start up.

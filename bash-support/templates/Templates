@@ -1,7 +1,14 @@
 § =============================================================
-§  User Macros
+§  Interface Version
+§
+§  enable advanced features
 § =============================================================
 
+InterfaceVersion ( "1.0" )
+
+§ =============================================================
+§  Settings
+§ =============================================================
 SetMacro( 'AUTHOR',      'Wang Jiezhe' )
 SetMacro( 'AUTHORREF',   '' )
 SetMacro( 'COMPANY',     '' )
@@ -11,7 +18,7 @@ SetMacro( 'LICENSE',     'GNU General Public License v3.0' )
 SetMacro( 'ORGANIZATION','' )
 
 SetFormat( 'DATE', '%x' )
-SetFormat( 'TIME', '%H:%M' )
+SetFormat( 'TIME', '%X' )
 SetFormat( 'YEAR', '%Y' )
 
 SetStyle( 'default' )
@@ -41,3 +48,20 @@ IncludeFile( 'shelloptions.templates'    )
 IncludeFile( 'io-redirection.templates'  )
 IncludeFile( 'patternmatching.templates' )
 
+§ =============================================================
+§  Help
+§
+§  help English:
+§  - pick up the word under the cursor
+§  - delete non-word characters before calling the help
+§  - the word is always included in the URL in lowercase,
+§    which seems to work better
+§ =============================================================
+
+SetMacro( 'HelpPathEnglish', 'http://en.wiktionary.org/wiki/' )
+
+== HELP: Help.English == map:he, sc:e ==
+|Word( '' )|
+|Substitute( '\W', '', 'g' )|
+|Browser( '|HelpPathEnglish||PICK:l|' )|
+== ENDTEMPLATE ==

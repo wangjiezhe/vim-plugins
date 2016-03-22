@@ -12,7 +12,7 @@
 "       Version:  see variable g:GitSupport_Version below
 "       Created:  06.10.2012
 "      Revision:  18.07.2015
-"       License:  Copyright (c) 2012-2015, Wolfgang Mehner
+"       License:  Copyright (c) 2012-2016, Wolfgang Mehner
 "                 This program is free software; you can redistribute it and/or
 "                 modify it under the terms of the GNU General Public License as
 "                 published by the Free Software Foundation, version 2 of the
@@ -675,6 +675,7 @@ let s:EditFileIDs = [
 			\ 'description',
 			\ 'hooks',
 			\ 'ignore-global', 'ignore-local', 'ignore-private',
+			\ 'modules',
 			\ ]
 "
 function! GitS_EditFilesComplete ( ArgLead, CmdLine, CursorPos )
@@ -787,7 +788,8 @@ call s:ApplyDefaultSetting ( 'Git_DiffExpandEmpty',      'no' )
 call s:ApplyDefaultSetting ( 'Git_ResetExpandEmpty',     'no' )
 call s:ApplyDefaultSetting ( 'Git_OpenFoldAfterJump',    'yes' )
 call s:ApplyDefaultSetting ( 'Git_StatusStagedOpenDiff', 'cached' )
-"
+call s:ApplyDefaultSetting ( 'Git_Editor',               '' )
+
 let s:Enabled         = 1           " Git enabled?
 let s:DisabledMessage = "Git-Support not working:"
 let s:DisabledReason  = ""
@@ -926,6 +928,9 @@ let s:HelpTxtStdNoUpdate .= "q       : close"
 " custom commands   {{{2
 "
 if s:Enabled
+"	command! -nargs=* -complete=file                                 GitAbove           :call GitS_Split('above',<count>,<q-args>)
+"	command! -nargs=* -complete=file                                 GitBelow           :call GitS_Split('below',<count>,<q-args>)
+"	command! -nargs=* -complete=file -count=1000                     GitTab             :call GitS_Split('tab',<count>,<q-args>)
 	command! -nargs=* -complete=file -bang                           GitAdd             :call GitS_Add(<q-args>,'<bang>'=='!'?'ef':'e')
 	command! -nargs=* -complete=file -range=0                        GitBlame           :call GitS_Blame('update',<q-args>,<line1>,<line2>)
 	command! -nargs=* -complete=file                                 GitBranch          :call GitS_Branch(<q-args>,'')
@@ -1010,17 +1015,23 @@ highlight default link GitConflict    DiffText
 "-------------------------------------------------------------------------------
 "
 function! s:OpenGitBuffer ( buf_name )
-	"
+
 	" a buffer like this already opened on the current tab page?
 	if bufwinnr ( a:buf_name ) != -1
 		" yes -> go to the window containing the buffer
 		exe bufwinnr( a:buf_name ).'wincmd w'
 		return 0
 	endif
-	"
+
 	" no -> open a new window
-	aboveleft new
-	"
+	if s:SplitMode == '' || s:SplitMode == 'above'
+		aboveleft new
+	elseif s:SplitMode == 'below'
+		belowright new
+	elseif s:SplitMode == 'tab'
+		exe s:SplitAddArg.'tabnew'
+	endif
+
 	" buffer exists elsewhere?
 	if bufnr ( a:buf_name ) != -1
 		" yes -> settings of the new buffer
@@ -1034,7 +1045,7 @@ function! s:OpenGitBuffer ( buf_name )
 		setlocal tabstop=8
 		setlocal foldmethod=syntax
 	endif
-	"
+
 	return 1
 endfunction    " ----------  end of function s:OpenGitBuffer  ----------
 "
@@ -1170,7 +1181,43 @@ function! GitS_FoldGrep ()
 		return head.line.tail
 	endif
 endfunction    " ----------  end of function GitS_FoldGrep  ----------
+
+"-------------------------------------------------------------------------------
+" GitS_Split : Open a Git buffer differently.   {{{1
 "
+" Mode:
+"   above - split aboveleft
+"   below - split belowright
+"   tab   - open in new tab
+"-------------------------------------------------------------------------------
+
+let s:SplitMode   = ''
+let s:SplitAddArg = 0
+
+function! GitS_Split ( mode, count, args )
+
+	if a:mode == 'above'
+	elseif a:mode == 'below'
+	elseif a:mode == 'tab'
+		let s:SplitAddArg = a:count == 1000 ? tabpagenr() : a:count
+	else
+		return s:ErrorMsg ( 'Unknown mode "'.a:mode.'".' )
+	endif
+
+	let s:SplitMode = a:mode
+
+	try
+		exe a:args
+	catch /.*/
+		call s:ErrorMsg ( substitute ( v:exception, '^Vim:', '', '' ) )
+	finally
+	endtry
+
+	let s:SplitMode   = ''
+	let s:SplitAddArg = 0
+
+endfunction    " ----------  end of function GitS_Split  ----------
+
 "-------------------------------------------------------------------------------
 " GitS_Run : execute 'git ...'   {{{1
 "
@@ -1650,21 +1697,33 @@ endfunction    " ----------  end of function GitS_Checkout  ----------
 "-------------------------------------------------------------------------------
 "
 function! GitS_Commit( mode, param, flags )
-	"
+
 	if a:flags =~ '[^c]'
 		return s:ErrorMsg ( 'Unknown flag "'.matchstr( a:flags, '[^c]' ).'".' )
 	endif
-	"
+
 	if a:mode == 'direct'
-		"
+
 		let args = s:GitCmdLineArgs ( a:param )
-		"
-		" empty parameter list?
-		if empty ( a:param )
+
+		if index ( args, '--dry-run', 1 ) != -1
+			" dry run in separate buffer
+			call GitS_CommitDryRun ( 'update', a:param )
+			return
+		elseif ! empty ( a:param ) || exists ( '$GIT_EDITOR' ) || g:Git_Editor != ''
+			" run assuming sensible parameters ...
+			" or assuming a correctly set "$GIT_EDITOR", e.g.
+			" - xterm -e vim
+			" - gvim -f
+			let param = a:param
+		elseif empty ( a:param )
+			" empty parameter list
+
 			return s:ErrorMsg ( 'The command :GitCommit currently can not be used this way.',
-						\ 'Please supply the message using either the -m or -F options,',
-						\ 'or by using the special commands :GitCommitFile, :GitCommitMerge or :GitCommitMsg.' )
-" 			"
+						\ 'Set $GIT_EDITOR properly, or use the confirmation variable "g:Git_Editor".',
+						\ 'Alternatively, supply the message using either the -m or -F options, or by',
+						\ 'using the special commands :GitCommitFile, :GitCommitMerge, or :GitCommitMsg.' )
+
 " 			" get ./.git/COMMIT_EDITMSG file
 " 			let file = s:GitRepoDir ()
 " 			"
@@ -1685,20 +1744,12 @@ function! GitS_Commit( mode, param, flags )
 " 			"
 " 			return
 " 			"
-		elseif index ( args, '--dry-run', 1 ) != -1
-			"
-			call GitS_CommitDryRun ( 'update', a:param )
-			return
-			"
-		else
-			"
-			" commit ...
-			let param = a:param
-			"
 		endif
-		"
+
 	elseif a:mode == 'file'
-		"
+		" message from file
+
+		" update the file
 		try
 			update
 		catch /E45.*/
@@ -1706,34 +1757,35 @@ function! GitS_Commit( mode, param, flags )
 		catch /.*/
 			call s:ErrorMsg ( 'Unknown error while writing the file: '.buffer_name( '%' ) )
 		endtry
-		"
-		" message from file
+
+		" write the given file or the current one
 		if empty( a:param ) | let param = '-F '.shellescape( expand('%') )
 		else                | let param = '-F '.a:param
 		endif
-		"
+
 	elseif a:mode == 'merge'
-		"
-		" merge conflict?
+		" merge conflict
+
+		" find the file "MERGE_HEAD"
 		if ! filereadable ( s:GitRepoDir ( 'git/MERGE_HEAD' ) )
 			return s:ErrorMsg (
 						\ 'could not read the file ".git/MERGE_HEAD" /',
 						\ 'there does not seem to be a merge conflict' )
 		endif
-		"
+
 		" message from ./.git/MERGE_MSG file
 		let file = s:GitRepoDir ( 'git/MERGE_MSG' )
-		"
+
 		" not readable?
 		if ! filereadable ( file )
 			return s:ErrorMsg (
 						\ 'could not read the file ".git/MERGE_MSG" /',
 						\ 'but found ./git/MERGE_HEAD (see :help GitCommitMerge)' )
 		endif
-		"
+
 		" commit
 		let param = '-F '.shellescape( file )
-		"
+
 	elseif a:mode == 'msg'
 		" message from command line
 		let param = '-m "'.a:param.'"'
@@ -1741,14 +1793,33 @@ function! GitS_Commit( mode, param, flags )
 		echoerr 'Unknown mode "'.a:mode.'".'
 		return
 	endif
-	"
+
 	if a:flags =~ 'c' && s:Question ( 'Execute "git commit '.param.'"?' ) != 1
 		echo "aborted"
 		return
 	endif
-	"
+
+	" set '$GIT_EDITOR' according to 's:Git_Editor'
+	if g:Git_Editor != ''
+		if exists ( '$GIT_EDITOR' )
+			let git_edit_save = $GIT_EDITOR
+		endif
+		if g:Git_Editor == 'vim'
+			let $GIT_EDITOR = s:Git_GitBashExecutable.' '.g:Xterm_Options.' -title "git commit" -e vim '
+		elseif g:Git_Editor == 'gvim'
+			let $GIT_EDITOR = 'gvim -f'
+		else
+			return s:ErrorMsg ( 'Invalid setting for "g:Git_Editor".' )
+		endif
+	endif
+
 	call s:StandardRun ( 'commit', param, '' )
-	"
+
+	" reset '$GIT_EDITOR' if necessary
+	if exists ( 'git_edit_save' )
+		let $GIT_EDITOR = git_edit_save
+	endif
+
 endfunction    " ----------  end of function GitS_Commit  ----------
 "
 "-------------------------------------------------------------------------------
@@ -1803,9 +1874,13 @@ function! GitS_CommitDryRun( action, ... )
 	endif
 	"
 	let cmd = s:Git_Executable.' commit --dry-run '.param
-	"
-	call s:UpdateGitBuffer ( cmd, update_only )
-	"
+
+	let success = s:UpdateGitBuffer ( cmd, update_only )
+
+	if ! success
+		redraw     " redraw after opening the buffer, before echoing
+		call s:ImportantMsg ( '"git commit --dry-run" reports an error' )
+	endif
 endfunction    " ----------  end of function GitS_CommitDryRun  ----------
 "
 "-------------------------------------------------------------------------------
@@ -2391,11 +2466,13 @@ function! GitS_Help( action, ... )
 		echoerr 'Unknown action "'.a:action.'".'
 		return
 	endif
-	"
+
 	if s:GitHelpFormat == 'html'
 		return s:StandardRun ( 'help', helpcmd, '' )
 	endif
-	"
+
+	let ts_save = &g:tabstop
+
 	if s:OpenGitBuffer ( 'Git - help' )
 		"
 		let b:GitSupport_HelpFlag = 1
@@ -2413,9 +2490,11 @@ function! GitS_Help( action, ... )
 	if s:UNIX && winwidth( winnr() ) > 0
 		let cmd = 'MANWIDTH='.winwidth( winnr() ).' '.cmd
 	endif
-	"
+
 	call s:UpdateGitBuffer ( cmd )
-	"
+
+	let &g:tabstop = ts_save
+
 	" :TODO:19.01.2014 18:26:WM: own toc or via ctags?
 " 	let b:GitSupport_TOC = []
 " 	"
@@ -4038,6 +4117,8 @@ function! GitS_GitEdit( fileid )
 		let filename = s:GitRepoDir ( 'top/.gitignore' )
 	elseif a:fileid == 'ignore-private'
 		let filename = s:GitRepoDir ( 'git/info/exclude' )
+	elseif a:fileid == 'modules'
+		let filename = s:GitRepoDir ( 'top/.gitmodules' )
 	endif
 	"
 	if filename == ''
@@ -4276,23 +4357,23 @@ endfunction    " ----------  end of function s:CmdLineComplete  ----------
 "-------------------------------------------------------------------------------
 "
 function! s:InitMenus()
-	"
+
 	if ! has ( 'menu' )
 		return
 	endif
-	"
+
 	let ahead = 'anoremenu '.s:Git_RootMenu.'.'
-	"
+
 	exe ahead.'Git       :echo "This is a menu header!"<CR>'
 	exe ahead.'-Sep00-   :'
-	"
-	" Commands
+
+	" Commands   {{{2
 	let ahead = 'anoremenu '.s:Git_RootMenu.'.&git\ \.\.\..'
 	let vhead = 'vnoremenu '.s:Git_RootMenu.'.&git\ \.\.\..'
-	"
+
 	exe ahead.'Commands<TAB>Git :echo "This is a menu header!"<CR>'
 	exe ahead.'-Sep00-          :'
-	"
+
 	exe ahead.'&add<TAB>:GitAdd           :GitAdd<space>'
 	exe ahead.'&blame<TAB>:GitBlame       :GitBlame<space>'
 	exe vhead.'&blame<TAB>:GitBlame       :GitBlame<space>'
@@ -4315,87 +4396,88 @@ function! s:InitMenus()
 	exe ahead.'&stash<TAB>:GitStash       :GitStash<space>'
 	exe ahead.'&status<TAB>:GitStatus     :GitStatus<space>'
 	exe ahead.'&tag<TAB>:GitTag           :GitTag<space>'
-	"
+
 	exe ahead.'-Sep01-                      :'
 	exe ahead.'run\ git&k<TAB>:GitK         :GitK<space>'
 	exe ahead.'run\ git\ &bash<TAB>:GitBash :GitBash<space>'
-	"
-	" Current File
+
+	" Current File   {{{2
 	let shead = 'anoremenu <silent> '.s:Git_RootMenu.'.&file.'
 	let vhead = 'vnoremenu <silent> '.s:Git_RootMenu.'.&file.'
-	"
+
 	exe shead.'Current\ File<TAB>Git :echo "This is a menu header!"<CR>'
 	exe shead.'-Sep00-               :'
-	"
-	exe shead.'&add<TAB>:GitAdd           :GitAdd -- %<CR>'
-	exe shead.'&blame<TAB>:GitBlame       :GitBlame -- %<CR>'
-	exe vhead.'&blame<TAB>:GitBlame       :GitBlame -- %<CR>'
-	exe shead.'&checkout<TAB>:GitCheckout :GitCheckout -- %<CR>'
-	exe shead.'&diff<TAB>:GitDiff         :GitDiff -- %<CR>'
-	exe shead.'&log<TAB>:GitLog           :GitLog --stat -- %<CR>'
-	exe shead.'r&m<TAB>:GitRm             :GitRm -- %<CR>'
-	exe shead.'&reset<TAB>:GitReset       :GitReset -q -- %<CR>'
-	"
-	" Specials
+
+	exe shead.'&add<TAB>:GitAdd               :GitAdd -- %<CR>'
+	exe shead.'&blame<TAB>:GitBlame           :GitBlame -- %<CR>'
+	exe vhead.'&blame<TAB>:GitBlame           :GitBlame -- %<CR>'
+	exe shead.'&checkout<TAB>:GitCheckout     :GitCheckout -- %<CR>'
+	exe shead.'&diff<TAB>:GitDiff             :GitDiff -- %<CR>'
+	exe shead.'&diff\ --cached<TAB>:GitDiff   :GitDiff --cached -- %<CR>'
+	exe shead.'&log<TAB>:GitLog               :GitLog --stat -- %<CR>'
+	exe shead.'r&m<TAB>:GitRm                 :GitRm -- %<CR>'
+	exe shead.'&reset<TAB>:GitReset           :GitReset -q -- %<CR>'
+
+	" Specials   {{{2
 	let ahead = 'anoremenu          '.s:Git_RootMenu.'.s&pecials.'
 	let shead = 'anoremenu <silent> '.s:Git_RootMenu.'.s&pecials.'
-	"
+
 	exe ahead.'Specials<TAB>Git :echo "This is a menu header!"<CR>'
 	exe ahead.'-Sep00-          :'
-	"
+
 	exe ahead.'&commit,\ msg\ from\ file<TAB>:GitCommitFile   :GitCommitFile<space>'
 	exe shead.'&commit,\ msg\ from\ merge<TAB>:GitCommitMerge :GitCommitMerge<CR>'
 	exe ahead.'&commit,\ msg\ from\ cmdline<TAB>:GitCommitMsg :GitCommitMsg<space>'
 	exe ahead.'-Sep01-          :'
-	"
+
 	exe ahead.'&grep,\ use\ top-level\ dir<TAB>:GitGrepTop       :GitGrepTop<space>'
 	exe ahead.'&merge,\ upstream\ branch<TAB>:GitMergeUpstream   :GitMergeUpstream<space>'
 	exe shead.'&stash\ list<TAB>:GitSlist                        :GitSlist<CR>'
-	"
-	" Custom Menu
+
+	" Custom Menu   {{{2
 	if ! empty ( s:Git_CustomMenu )
-		"
+
 		let ahead = 'anoremenu          '.s:Git_RootMenu.'.&custom.'
 		let ahead = 'anoremenu <silent> '.s:Git_RootMenu.'.&custom.'
-		"
+
 		exe ahead.'Custom<TAB>Git :echo "This is a menu header!"<CR>'
 		exe ahead.'-Sep00-        :'
-		"
+
 		call s:GenerateCustomMenu ( s:Git_RootMenu.'.custom', s:Git_CustomMenu )
-		"
+
 		exe ahead.'-HelpSep-                                  :'
 		exe ahead.'help\ (custom\ menu)<TAB>:GitSupportHelp   :call GitS_PluginHelp("gitsupport-menus")<CR>'
-		"
+
 	endif
-	"
-	" Edit
+
+	" Edit   {{{2
 	let ahead = 'anoremenu          '.s:Git_RootMenu.'.&edit.'
 	let shead = 'anoremenu <silent> '.s:Git_RootMenu.'.&edit.'
-	"
+
 	exe ahead.'Edit File<TAB>Git :echo "This is a menu header!"<CR>'
 	exe ahead.'-Sep00-          :'
-	"
+
 	for fileid in s:EditFileIDs
 		let filepretty = substitute ( fileid, '-', '\\ ', 'g' )
 		exe shead.'&'.filepretty.'<TAB>:GitEdit   :GitEdit '.fileid.'<CR>'
 	endfor
-	"
-	" Help
+
+	" Help   {{{2
 	let ahead = 'anoremenu          '.s:Git_RootMenu.'.help.'
 	let shead = 'anoremenu <silent> '.s:Git_RootMenu.'.help.'
-	"
+
 	exe ahead.'Help<TAB>Git :echo "This is a menu header!"<CR>'
 	exe ahead.'-Sep00-      :'
-	"
+
 	exe shead.'help\ (Git-Support)<TAB>:GitSupportHelp     :call GitS_PluginHelp("gitsupport")<CR>'
 	exe shead.'plug-in\ settings<TAB>:GitSupportSettings   :call GitS_PluginSettings(0)<CR>'
-	"
-	" Main Menu - open buffers
+
+	" Main Menu - open buffers   {{{2
 	let ahead = 'anoremenu          '.s:Git_RootMenu.'.'
 	let shead = 'anoremenu <silent> '.s:Git_RootMenu.'.'
-	"
+
 	exe ahead.'-Sep01-                      :'
-	"
+
 	exe ahead.'&run\ git<TAB>:Git           :Git<space>'
 	exe shead.'&branch<TAB>:GitBranch       :GitBranch<CR>'
 	exe ahead.'&help\ \.\.\.<TAB>:GitHelp   :GitHelp<space>'
@@ -4404,7 +4486,8 @@ function! s:InitMenus()
 	exe shead.'&stash\ list<TAB>:GitSlist   :GitSlist<CR>'
 	exe shead.'&status<TAB>:GitStatus       :GitStatus<CR>'
 	exe shead.'&tag<TAB>:GitTag             :GitTag<CR>'
-	"
+	" }}}2
+
 endfunction    " ----------  end of function s:InitMenus  ----------
 "
 "-------------------------------------------------------------------------------
