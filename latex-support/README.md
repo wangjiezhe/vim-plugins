@@ -1,4 +1,4 @@
-README for latex-support.vim (Version 1.2) / March 17 2016
+README for latex-support.vim (Version 1.3alpha) / February 07 2018
 ================================================================================
 
   *  INSTALLATION
@@ -173,12 +173,37 @@ Any problems? See the TROUBLESHOOTING section at the end of the help file
 RELEASE NOTES
 ================================================================================
 
-RELEASE NOTES FOR VERSION 1.2
+RELEASE NOTES FOR VERSION 1.3alpha
 ----------------------------------------------------------------------
-- Add 'g:Latex_CustomTemplateFile'.
-- Add template personalization file and setup wizard.
-- Change some templates.
-- Add maps to bibtex buffers.
+- Adapt for running under Neovim more smoothly.
+- Add commands :Latex, :LatexCheck, :LatexMakeindex, and :LatexBibtex to run the
+  external commands.
+- Add command :LatexMakeglossaries to run `makeglossaries`.
+- Add command :LatexView to start external viewers.
+- Add command :LatexConvert to convert documents.
+- Add command :LatexMainDoc to set the document for typesetting, viewing, ...
+- Add command :LatexTypesetter to change the typesetter during runtime.
+- Add command :LatexProcessing to change between foreground and background
+  processing.
+- Add command :LatexErrors and map ´re to view errors from background processing
+  in quickfix.
+- BibTeX errors are recognized by quickfix.
+- Add a converter 'eps-pdf'.
+- The templates which are inserted into new files as file skeletons can be
+  specified in the templates library, via the property:
+    `Latex::FileSkeleton::Script`
+- Add configuration variables `g:Latex_Ctrl_j` and `g:Latex_Ctrl_d` to control
+  the creation of the `CTRL+J` and `CTRL+D` maps.
+- Remove `g:Latex_CreateMenusDelayed`, use `g:Latex_LoadMenus` instead.
+- Improve templates. (Includes the removal of some templates!)
+- Move the filetype plug-ins for tex and make to `latex-support/rc`.
+- Remove the definition of the maps `CTRL+F9` and `ALT+F9`. Add them to your
+  filetype plug-ins if you want to use them.
+- Minor bugfixes.
+
+Note: The filetype plug-ins have been moved, and are thus not loaded
+automatically anymore. Copy them from `latex-support/rc` to `ftplugin`,
+or add the commands there to your own filetype plug-ins.
 
 
 RELEASE NOTES FOR OLDER VERSIONS
@@ -222,12 +247,6 @@ ___The following files and extensions are for convenience only.___
 ___latex-support.vim will work without them.___
 ___The settings are explained in the files themselves.___
 
-    ftplugin/make.vim
-                        Access hotkeys for make(1) in makefiles.
-    ftplugin/tex.vim
-                        Suggestion for a filetype plugin:
-                          defines additional maps
-
     ftdetect/template.vim
     ftplugin/template.vim
     syntax/template.vim
@@ -253,6 +272,13 @@ ___The settings are explained in the files themselves.___
                           font, use of dictionaries, ...
                         The file is commented. Append it to your .vimrc if you
                         like.
+
+    latex-support/rc/make.vim
+                        Define maps for make(1) in makefiles.
+    latex-support/rc/tex.vim
+                        Suggestion for a filetype plugin:
+                          defines additional maps, expands keyword characters
+                          for better support of labels
 
     latex-support/rc/*.templates
                         Sample template files for customization. Used by the

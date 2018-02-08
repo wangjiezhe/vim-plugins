@@ -6,7 +6,7 @@
 %%
 %%        Version:  1.0
 %%        Created:  10.11.2006
-%%       Revision:  none
+%%       Revision:  03.10.2017
 %%
 %%         Author:  Wolfgang Mehner, wolfgang-mehner@web.de
 %%                  (formerly Dr. Fritz Mehner (fgm), mehner.fritz@web.de)
@@ -31,7 +31,7 @@
 %
 \setlength\parindent{0pt}
 %
-\newcommand{\Pluginversion}{6.2}
+\newcommand{\Pluginversion}{6.2.1}
 \newcommand{\ReleaseDate}{\today}
 \newcommand{\Rep}{{\tiny{[n]}}}
 %
@@ -135,26 +135,58 @@ Key mappings for Vim and gVim.\\
 %%======================================================================
 %
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
-\begin{tabular}[]{|p{15mm}|p{55mm}|}
+\begin{tabular}[]{|p{11mm}|p{60mm}|}
 %%----------------------------------------------------------------------
 %%  menu statements
 %%----------------------------------------------------------------------
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{S}tatements}} \\
+\hline \verb'\sfo' & \verb'for ( ; ; )'         \hfill \textit{standard} (n,v,i)\\
+\hline \verb'\sfr' & \verb'for ( : )'           \hfill \textit{range-based} (n,v,i)\\
 \hline \verb'\sd'  & \verb'do { } while'        \hfill (n,v,i)\\
-\hline \verb'\sf'  & \verb'for'                 \hfill (n,i)\\
-\hline \verb'\sfo' & \verb'for { }'             \hfill (n,v,i)\\
-\hline \verb'\si'  & \verb'if'                  \hfill (n,i)\\
+\hline \verb'\sw'  & \verb'while { }'           \hfill (n,v,i)\\
 \hline \verb'\sif' & \verb'if { }'              \hfill (n,v,i)\\
-\hline \verb'\sie' & \verb'if else'             \hfill (n,v,i)\\
-\hline \verb'\sife'& \verb'if { } else { }'     \hfill (n,v,i)\\
-\hline \verb'\se'  & \verb'else { }'            \hfill (n,v,i)\\
-\hline \verb'\sw'  & \verb'while'               \hfill (n,i)\\
-\hline \verb'\swh' & \verb'while { }'           \hfill (n,v,i)\\
+\hline \verb'\sie' & \verb'if { } else { }'     \hfill (n,v,i)\\
+\hline \verb'\sei' & \verb'else if { }'         \hfill (n,v,i)\\
+\hline \verb'\sel' & \verb'else { }'            \hfill (n,v,i)\\
 \hline \verb'\ss'  & \verb'switch'              \hfill (n,v,i)\\
 \hline \verb'\sc'  & \verb'case'                \hfill (n,i)\\
 \hline \verb'\sb'  & \verb'{ }'                 \hfill (n,v,i)\\
 \hline
+%%----------------------------------------------------------------------
+%%  idioms menu
+%%----------------------------------------------------------------------
+\hline
+\multicolumn{2}{|r|}{\textsl{\textbf{I}dioms}}   \\
+\hline \verb'\if'  & function                           \hfill (n,v,i)\\
+\hline \verb'\isf' & static function                    \hfill (n,v,i)\\
+\hline \verb'\im'  & \verb'main()'                      \hfill (n,v,i)\\
+\hline \verb'\ie'  & \verb'enum'   + \verb'typedef'     \hfill (n,v,i)\\
+\hline \verb'\is'  & \verb'struct' + \verb'typedef'     \hfill (n,v,i)\\
+\hline \verb'\iu'  & \verb'union'  + \verb'typedef'     \hfill (n,v,i)\\
+\hline \verb'\ipr' & \verb'printf()'                    \hfill (n,i)\\
+\hline \verb'\isc' & \verb'scanf()'                     \hfill (n,i)\\
+\hline \verb'\ica' & \verb'p=calloc()'                  \hfill (n,i)\\
+\hline \verb'\ima' & \verb'p=malloc()'                  \hfill (n,i)\\
+\hline \verb'\ire' & \verb'p=realloc()'                 \hfill (n,i)\\
+\hline \verb'\isi' & \verb'sizeof()'                    \hfill (n,v,i)\\
+\hline \verb'\ias' & \verb'assert()'                    \hfill (n,v,i)\\
+\hline \verb'\ii'  & open input file                    \hfill (n,v,i)\\
+\hline \verb'\io'  & open output file                   \hfill (n,v,i)\\
+\hline \verb'\ifsc'& fscanf                             \hfill (n,i)\\
+\hline \verb'\ifpr'& fprintf                            \hfill (n,i)\\
+\hline \Rep\verb'\i0'  & \verb'for( x=0; x<n; x+=1 )'   \hfill (n,v,i)\\
+\hline \Rep\verb'\in'  & \verb'for( x=n-1; x>=0; x-=1 )'\hfill (n,v,i)\\
+\hline
+\end{tabular} \\
+%%~~~~~ TABULAR :  end  ~~~~~~~~~~
+%
+%%======================================================================
+%%  page 1, table, right  part        [[[1
+%%======================================================================
+%
+%%~~~~~ TABULAR : begin ~~~~~~~~~~
+\begin{tabular}[]{|p{11mm}|p{60mm}|}%
 %%----------------------------------------------------------------------
 %%  preprocessor menu
 %%----------------------------------------------------------------------
@@ -178,15 +210,6 @@ Key mappings for Vim and gVim.\\
 \hline \verb'\pi0'  & \verb'#if 0 #endif'          \hfill (n,v,i)\\
 \hline \verb'\pr0'  & remove \verb'#if 0 #endif'   \hfill (n,i)\\
 \hline
-\end{tabular} \\
-%%~~~~~ TABULAR :  end  ~~~~~~~~~~
-%
-%%======================================================================
-%%  page 1, table, right  part        [[[1
-%%======================================================================
-%
-%%~~~~~ TABULAR : begin ~~~~~~~~~~
-\begin{tabular}[]{|p{11mm}|p{60mm}|}%
 %%----------------------------------------------------------------------
 %%  snippet menu
 %%----------------------------------------------------------------------
@@ -210,31 +233,6 @@ Key mappings for Vim and gVim.\\
 \hline     \verb'\ntw' & template setup wizard     \hfill (n, i)\\
 \hline     \verb'\nts' & choose template style     \hfill (n, i)\\
 \hline     \verb'\njt' & insert jump tag           \hfill (n,i)\\
-\hline
-%%----------------------------------------------------------------------
-%%  idioms menu
-%%----------------------------------------------------------------------
-\hline 
-\multicolumn{2}{|r|}{\textsl{\textbf{I}dioms}}   \\
-\hline \verb'\if'  & function                           \hfill (n,v,i)\\
-\hline \verb'\isf' & static function                    \hfill (n,v,i)\\
-\hline \verb'\im'  & \verb'main()'                      \hfill (n,v,i)\\
-\hline \verb'\ie'  & \verb'enum'   + \verb'typedef'     \hfill (n,v,i)\\
-\hline \verb'\is'  & \verb'struct' + \verb'typedef'     \hfill (n,v,i)\\
-\hline \verb'\iu'  & \verb'union'  + \verb'typedef'     \hfill (n,v,i)\\
-\hline \verb'\ipr' & \verb'printf()'                    \hfill (n,i)\\
-\hline \verb'\isc' & \verb'scanf()'                     \hfill (n,i)\\
-\hline \verb'\ica' & \verb'p=calloc()'                  \hfill (n,i)\\
-\hline \verb'\ima' & \verb'p=malloc()'                  \hfill (n,i)\\
-\hline \verb'\ire' & \verb'p=realloc()'                 \hfill (n,i)\\
-\hline \verb'\isi' & \verb'sizeof()'                    \hfill (n,v,i)\\
-\hline \verb'\ias' & \verb'assert()'                    \hfill (n,v,i)\\
-\hline \verb'\ii'  & open input file                    \hfill (n,v,i)\\
-\hline \verb'\io'  & open output file                   \hfill (n,v,i)\\
-\hline \verb'\ifsc'& fscanf                             \hfill (n,i)\\
-\hline \verb'\ifpr'& fprintf                            \hfill (n,i)\\
-\hline \Rep\verb'\i0'  & \verb'for( x=0; x<n; x+=1 )'   \hfill (n,v,i)\\
-\hline \Rep\verb'\in'  & \verb'for( x=n-1; x>=0; x-=1 )'\hfill (n,v,i)\\
 \hline
 \end{tabular}
 %
@@ -304,15 +302,15 @@ Key mappings for Vim and gVim.\\
 \hline \verb'\rr'  & run                                     \hfill (n,i)\\
 \hline \verb'\ra'  & set comand line arguments               \hfill (n,i)\\
 \hline \verb'\rd'  & start debugger                          \hfill (n,i)\\
-\hline \verb'\re'  & executable to run$^1$                   \hfill (n,i)\\
+\hline \verb'\re'  & executable to run                       \hfill (n,i)\\
 %
-\hline \verb'\rp'  & run \texttt{splint}$^2$                 \hfill (n,i)\\
+\hline \verb'\rp'  & run \texttt{splint}$^1$                 \hfill (n,i)\\
 \hline \verb'\rpa' & cmd. line arg. for \texttt{splint}      \hfill (n,i)\\
 %
-\hline \verb'\rcc' & run \texttt{cppcheck}$^3$               \hfill (n,i)\\
+\hline \verb'\rcc' & run \texttt{cppcheck}$^2$               \hfill (n,i)\\
 \hline \verb'\rccs'& severity for \texttt{cppcheck}          \hfill (n,i)\\
 %
-\hline \verb'\rk'  & run \texttt{ CodeCheck}$^4$             \hfill (n,i)\\
+\hline \verb'\rk'  & run \texttt{ CodeCheck}$^3$             \hfill (n,i)\\
 \hline \verb'\rka' & cmd. line arg. for \texttt{CodeCheck}   \hfill (n,i)\\
 %
 \hline \verb'\ri'  & run \texttt{ indent}        \hfill (n,i)\\
@@ -332,18 +330,18 @@ Key mappings for Vim and gVim.\\
 %%  Tool Box : Make
 %%----------------------------------------------------------------------
 \hline
-\multicolumn{2}{|r|}{\textsl{Tool Box : \textbf{M}ake}} \\
-\hline \verb'\rm'  & run \texttt{ make}$^1$                  \hfill (n,i)\\
-\hline \verb'\rmc' & run \texttt{ make clean}$^1$            \hfill (n,i)\\
-\hline \verb'\rmd' & run \texttt{ make doc}$^1$              \hfill (n,i)\\
-\hline \verb'\rcm' & choose a makefile $^1$                  \hfill (n,i)\\
-\hline \verb'\rma' & cmd. line arg. for \texttt{make}$^1$    \hfill (n,i)\\
+\multicolumn{2}{|r|}{\textsl{Tool Box : \textbf{M}ake}$^{4,5}$} \\
+\hline \verb'\rm'  & run \texttt{ make}                  \hfill (n,i)\\
+\hline \verb'\rmc' & run \texttt{ make clean}            \hfill (n,i)\\
+\hline \verb'\rmd' & run \texttt{ make doc}              \hfill (n,i)\\
+\hline \verb'\rcm' & choose a makefile                   \hfill (n,i)\\
+\hline \verb'\rma' & cmd. line arg. for \texttt{make}    \hfill (n,i)\\
 \hline
 %%----------------------------------------------------------------------
 %%  Additional mappings
 %%----------------------------------------------------------------------
 \hline
-\multicolumn{2}{|r|}{\textbf{Additional Mappings}$^5$}\\
+\multicolumn{2}{|r|}{\textbf{Additional Mappings}$^4$}\\
 \hline
 \hline \textbf{typing}& \textbf{expansion}\\
 \hline \verb'/*'      & \verb'/*  */' \hfill (i)\\
@@ -370,11 +368,11 @@ Set severity for \texttt{cppcheck} (same as \textbackslash\texttt{rccs})\\[1.0ex
 %
 \scriptsize{%
 \hrulefill\\
-$^1$ also working for filetype \textbf{make}\\
-$^2$ \textit{www.splint.org}\\
-$^3$ \textit{cppcheck.sourceforge.net}\\
-$^4$ \textbf{CodeCheck}$^{TM}$ is a product of Abraxas Software, Inc.\\
-$^5$ defined in \verb'~/ftplugin/c.vim'
+$^1$ \textit{www.splint.org}\\
+$^2$ \textit{cppcheck.sourceforge.net}\\
+$^3$ \textbf{CodeCheck}$^{TM}$ is a product of Abraxas Software, Inc.\\
+$^4$ see \verb'c-support/rc/c.vim' for how to define them \\
+$^5$ see \verb'c-support/rc/make.vim' for how to define them for filetype \textbf{make}
 }%
 %
 \end{minipage}

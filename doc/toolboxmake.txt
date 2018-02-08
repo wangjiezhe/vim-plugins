@@ -1,8 +1,8 @@
-*toolboxmake.txt*                  Make Tool                      July 23 2015
+*toolboxmake.txt*                  Make Tool                       Oct 16 2017
 
 Make Tool                                                       *toolbox-make*
 
-                             Plug-in version 1.1
+                            Plug-in version 1.1.1
                         for Vim version 7.0 and above
                  Wolfgang Mehner <wolfgang-mehner at web.de>
 
@@ -171,6 +171,15 @@ The executable is set by g:Make_Executable: >
 ==============================================================================
 A.  CHANGE LOG                                       *toolbox-make-change-log*
 ==============================================================================
+
+------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.1.1
+------------------------------------------------------------------------------
+
+- Change: If make is not executable, still provide the functionality for
+  finding targets in a Makefile.
+- Change: Do not use :lchdir internally, switch to :cd, which has less
+  side-effects.
 
 ------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.1

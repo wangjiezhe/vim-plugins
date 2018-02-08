@@ -1,17 +1,21 @@
-*vimsupport.txt*                 Vim Support                       Mar 17 2016
+*vimsupport.txt*                 Vim Support                       Oct 12 2017
 
 Vim Support                                         *vim-support* *vimsupport*
 
-                             Plug-in version 2.4
+                             Plug-in version 2.5alpha
                         for Vim version 7.0 and above
                    Wolfgang Mehner <wolfgang-mehner@web.de>
                       Fritz Mehner <mehner.fritz@web.de>
 
-Vim Support implements a Vim-IDE for Vim/gVim. It is written to considerably
-speed up writing Vim script code in a consistent style.  This is done by
-inserting complete statements, comments, idioms, and code snippets.    There
-are many additional hints and options which can improve speed and comfort when
-writing Vim scripts.
+Vim Support implements a Vim-IDE for Vim/gVim/Neovim. It is written to
+considerably speed up writing Vim script code in a consistent style. This is
+done by inserting complete statements, comments, idioms, and code snippets.
+There are many additional hints and options which can improve speed and
+comfort when writing Vim scripts.
+
+==============================================================================
+0.  TABLE OF CONTENTS                                    *vimsupport-contents*
+==============================================================================
 
  1.     Usage with GUI                      |vimsupport-usage-gvim|
  1.1     Menu 'Comments'                    |vimsupport-comments|
@@ -359,25 +363,25 @@ the file(s) and to rebuild the internal representation of the templates.
 1.8.1 Hardcopy                                           *vimsupport-hardcopy*
 --------------
 
-Generates a PostScript file from the whole buffer or from a marked region.
-The hardcopy goes to the current working directory.  If the buffer contains
+Generates a PostScript file from the whole buffer or from a marked region. The
+hardcopy is written to the current working directory. If the buffer contains
 documentation or other material from non-writable directories the hardcopy
 goes to the HOME directory. The output destination will be shown in a message.
 
 The print header contains date and time according the current locale. The
-definition used is
-
-  let s:Vim_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
-
-The current locale can be overwritten by changing the language, e.g.
-
+definition used is:
+>
+  let g:Vim_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
+<
+The current locale can be overwritten by changing the language, e.g. :
+>
   :language C
-
+<
 or by setting a global variable in the file '.vimrc', e.g. :
-
+>
   let g:Vim_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     SEITE %N"
-
-See :h printheader and :h strftime()  for more details.
+<
+See |printheader| and |strftime()| for more details.
 
 1.8.2 Settings                                           *vimsupport-settings*
 --------------
@@ -543,8 +547,6 @@ influences only files with filetype 'vim'.
 
 vim-support/README.md              Release notes, installation description.
 
-ftplugin/help.vim                  Filetype plugin to extend Vim help.
-
 plugin/vim-support.vim             The vim plugin for Vim/gVim.
 
 doc/vimsupport.txt                 The help file for the local online help.
@@ -591,6 +593,8 @@ g:Vim_LoadMenus             'yes'
 g:Vim_CreateMenusDelayed    'no'
 g:Vim_RootMenu              '&Vim'
 g:Vim_GuiSnippetBrowser     'gui'
+g:Vim_Ctrl_j                'yes'
+g:Vim_Ctrl_d                'yes'
 g:Vim_LineEndCommColDefault 49
 g:Vim_Printheader           '%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N'
                              'vim.exe'     (Windows)
@@ -609,6 +613,8 @@ g:Vim_CreateMenusDelayed    Load menus only with filetype 'vim'
 g:Vim_RootMenu              The name of the root menu entry of this plugin
                              (see |vimsupport-custom-root|).
 g:Vim_GuiSnippetBrowser     code snippet browser: 'gui', 'commandline'
+g:Vim_Ctrl_j                hotkey Ctrl-J 'yes'/'no' (see |vimsupport-Ctrl-j|)
+g:Vim_Ctrl_d                hotkey Ctrl-D 'yes'/'no' (see |vimsupport-Ctrl-j|)
 
 g:Vim_LineEndCommColDefault default starting column for line end comments
 g:Vim_Printheader           hardcopy header format
@@ -715,6 +721,13 @@ support this feature, so it should only contain basic information not
 pertaining to a specific programming language. It can be set up using a
 wizard, which is run by the map \ntw or the menu entry:
   Vim -> Snippets -> template setup wizard
+
+Further template files can be added using the call: >
+  call mmtemplates#config#Add ( 'vim', '<PATH>/some.templates', 'example', 'nte' )
+The first parameter adds the file to your VimL templates, the second is the
+path. The remaining two optional parameters specify the symbolic name for
+these templates and the map to edit them. The map is '\nte' in this example,
+if the standard mapleader is set.
 
 ------------------------------------------------------------------------------
 4.1  TEMPLATE FILES                               *vimsupport-templates-files*

@@ -3,8 +3,9 @@ Preface
 
 This repository is mainly for the use with plug-in managers.
 
-The development happens here:
-[WolfgangMehner/vim-plugins](https://github.com/WolfgangMehner/vim-plugins)
+Have a look at the [Screenshot Page](https://wolfgangmehner.github.io/vim-plugins/luasupport.html).
+
+The development happens in [WolfgangMehner/vim-plugins](https://github.com/WolfgangMehner/vim-plugins).
 
 
 Preview Version
@@ -12,17 +13,13 @@ Preview Version
 
 ___This is a preview version!___
 
-This version is a preview, containing a reworked template engine.
-Please report any problems.
+Notable new feature:
 
-The new features of Lua-Support and the template engine are:
+- Run Lua in a terminal window directly inside the editor.
+- Enable fully for Neovim.
 
-- No need to edit stock templates anymore, by doing the personalization/
-  customization in separate files
-- Setup wizard for customization and personalization file
-- Lua's reference manuals in Vim help format,
-  read the documentation directly inside the editor
-- More to come ...
+The terminal window relies on the new `+terminal` feature, which becomes
+available with a patch level of approx. `8.0.1000`.
 
 _Please read the release notes below._
 

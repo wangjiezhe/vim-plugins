@@ -4,6 +4,7 @@
 
 == LIST: environment_list == list, bare ==
 align
+aligned
 array
 center
 description
@@ -20,6 +21,7 @@ flushright
 itemize
 list
 lstlisting
+luacode
 minipage
 picture
 onehalfspace

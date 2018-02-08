@@ -1,8 +1,8 @@
-*csupport.txt*                  C/C++ Support                      Mar 17 2016
+*csupport.txt*                  C/C++ Support                      Oct 03 2017
 
 C/C++ Support                                            *c-support* *csupport*
 
-                             Plug-in version 6.2
+                            Plug-in version 6.2.1pre
                         for Vim version 7.0 and above
                    Wolfgang Mehner <wolfgang-mehner@web.de>
                 (formerly Fritz Mehner <mehner.fritz@web.de>)
@@ -87,7 +87,8 @@ keystroke.
  5.3    Templates                               |csupport-templates-names|
  5.3.1  Template definition                     |csupport-templates-definition|
  5.3.2  The jump tags <+text+> etc.             |csupport-templates-jumptags|
- 5.3.3  Command Ctrl-j                          |csupport-Ctrl-j|
+ 5.3.3  Command Ctrl-j                          |csupport-CTRL-J|
+ 5.4    File Skeletons                          |csupport-file-skeleton|
  5.5    Binding a style to a file extension     |csupport-templates-bind|
  6.    C/C++ Dictionaries                       |csupport-dictionary|
  7.    Extend ctags                             |csupport-ctags|
@@ -1066,7 +1067,8 @@ To switch the make tool box off add the following line to the file .vimrc
 >
   let g:C_UseTool_make  = 'no'
 <
-The hotkeys for the make tool are defined in the file ~/.vim/ftplugin/c.vim .
+The maps for the make tool can be defined in the file '~/.vim/ftplugin/c.vim'.
+Compare the example filetype plug-in 'c-support/rc/c.vim'.
 
 1.8.2 Other Tools                                   *csupport-toolbox-others*
 
@@ -1226,18 +1228,19 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
 
   -- Statements ---------------------------------------------------------
 
+     \sfo      for { ; ; }                         (n,v,i)
+     \sfr      for { : }   (range-based)           (n,v,i)
      \sd       do { } while                        (n,v,i)
-     \sf       for                                 (n,i)
-     \sfo      for { }                             (n,v,i)
-     \si       if                                  (n,i)
+     \sw       while { }                           (n,v,i)
+
      \sif      if { }                              (n,v,i)
-     \sie      if else                             (n,v,i)
-     \sife     if { } else { }                     (n,v,i)
-     \se       else { }                            (n,v,i)
-     \sw       while                               (n,i)
-     \swh      while { }                           (n,v,i)
+     \sie      if { } else { }                     (n,v,i)
+     \sei      else if { }                         (n,v,i)
+     \sel      else { }                            (n,v,i)
+
      \ss       switch                              (n,v,i)
      \sc       case                                (n,i)
+
      \sb       {}                                  (n,v,i)
 
   -- Idioms -------------------------------------------------------------
@@ -1455,7 +1458,6 @@ Several global variables are checked by the script to customize it:
  g:C_CreateMenusDelayed     'no'
  g:C_LocalTemplateFile      $HOME.'/.vim/c-support/templates/Templates'
  g:C_MapLeader              '\'
- g:C_MenuHeader             'yes'
  g:C_NonCComment            '#'
  g:C_OutputGvim             'vim'
  g:C_Printheader            "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
@@ -1497,7 +1499,7 @@ The variable plugin_dir will automatically be set to one of the following values
  g:C_CodeSnippets          : The name of the code snippet directory (see
                              |csupport-snippets|).
  g:C_CplusCompiler         : The name of the C++ compiler.
- g:C_Ctrl_j                : hotkey Ctrl-j 'on'/'off' (see |csupport-Ctrl-j|)
+ g:C_Ctrl_j                : hotkey Ctrl-j 'on'/'off' (see |csupport-CTRL-j|)
  g:C_CustomTemplateFile    : sets the custom template file (see|csupport-templates|)
  g:C_Debugger              : the default debugging: 'gdb', 'kdbg', or 'ddd'
  g:C_Dictionary_File       : The name(s) of the dictionary file(s) used for
@@ -1515,7 +1517,6 @@ The variable plugin_dir will automatically be set to one of the following values
  g:C_LocalTemplateFile     : sets the local template file (see |csupport-templates|)
  g:C_Man                   : The name of the man utility.
  g:C_MapLeader             : the map leader for hotkeys (see ||csupport-usage-vim|)
- g:C_MenuHeader            : Switch the submenu header on/off.
  g:C_NonCComment           : comment leader string for a non-C comment
  g:C_ObjExtension          : C/C+ file extension for objects (leading point
                              required if not empty)
@@ -1529,7 +1530,8 @@ The variable plugin_dir will automatically be set to one of the following values
  g:C_VimCompilerName       : the compiler name used by :compiler
  g:Xterm_Executable        : the xterm executable
  g:Xterm_Options           : the xterm options
- g:C_XtermDefaults         : the xterm options (included for backwards
+ g:C_XtermDefaults         : the xterm options
+                             (included for backwards compatibility)
 
 To override the default add appropriate assignments to ~/.vimrc .
 The following global variables can be changed on the fly from the Vim command
@@ -1830,7 +1832,7 @@ The text inside the brackets is userdefined and can be empty. The text can be
 composed from letters (uppercase and lowercase), digits, and underscores.
 After the insertion of an template these jump targets will be highlighted.
 
-5.3.3  Command Ctrl-j                                        *csupport-Ctrl-j*
+5.3.3  Command Ctrl-j                                        *csupport-CTRL-j*
 
 Use the command Ctrl-j to jump to the next target. The target will be removed
 and the mode will switched to insertion. Ctrl-j works in normal and in insert
@@ -1848,9 +1850,40 @@ you jump to the target <-IF PART-> and deletes it.  When the block is written
 a Ctrl-j leads you to the else-part.  The target <+ELSE_PART+> disappears and
 you can type on.
 
-==============================================================================
+------------------------------------------------------------------------------
+5.4  FILE SKELETONS                                   *csupport-file-skeleton*
+------------------------------------------------------------------------------
+
+If g:C_InsertFileHeader is set to "yes", templates are automatically inserted
+into new C and C++ files. The lists of templates used to create these file
+skeletons are specified in the template library. They can for example be set
+in the customization file (see |csupport-templates|).
+
+                          *C::FileSkeleton::Header* *Cpp::FileSkeleton::Header*
+                          *C::FileSkeleton::Source* *Cpp::FileSkeleton::Source*
+The file skeletons are controlled via these properties, which can be set in
+one of the template files. For each filetype, the headers and source files can
+be different:
+>
+  SetProperty ( 'C::FileSkeleton::Header',   'Comments.file description header' )
+  SetProperty ( 'C::FileSkeleton::Source',   'Comments.file description impl' )
+  SetProperty ( 'Cpp::FileSkeleton::Header', 'Comments.file description header' )
+  SetProperty ( 'Cpp::FileSkeleton::Source', 'Comments.file description impl' )
+<
+This inserts only comments to describe the file. To disable the insertion for
+one of these types, set the property to an empty string: >
+  SetProperty ( 'C::FileSkeleton::Source', '' )
+In general, these properties are semicolon-separated lists of templates to be
+inserted: >
+  SetProperty ( 'C::FileSkeleton::Source', 'Comments.file description impl; ;Comments.all sections.implementation, C' )
+This will insert the file description and the file section comments (see
+|csupport-comm-sections|). If a space appears as an entry in the list, an
+empty line is inserted: >
+  '...; ;...'
+<
+------------------------------------------------------------------------------
 5.5  BINDING A STYLE TO A FILE EXTENSION             *csupport-templates-bind*
-==============================================================================
+------------------------------------------------------------------------------
 
 You can bind the existing styles to one or more filename extensions. To do so
 assign a Dictionary to the global variable g:C_Styles in '~/.vimrc' :
@@ -2006,8 +2039,8 @@ See |folding| for more information on folding.
 9.  Additional Mappings                                 *csupport-ad-mappings*
 ==============================================================================
 
-There are a few additional filetype specific key mappings defined in
-'~/.vim/ftplugin/c.vim'.
+Additional mappings can be defined in the file '~/.vim/ftplugin/c.vim'.
+Compare the example filetype plug-in 'c-support/rc/c.vim'.
 
 Complete a classical C comment: '/*' => '/* | */' (modes: i,v).
 
@@ -2022,15 +2055,16 @@ Open a block (modes: i,v):
               }
 In visual mode the content of the new block will be indented.
 
-The file customization.cpp.vim provides additional insert mode mappings to
-facilitate writting cin and cout statements, e.g.
+The file 'c-support/rc/cpp.vim' provides additional insert mode mappings to
+facilitate writing cin and cout statements, e.g.
 >
-  '<<'    -> ' << |'
-  '<<"'   -> ' << "|" '
-  '<<;'   -> ' << "|\n";'
-  '>>'    -> ' >> |'
+  '<<'   ->  ' << |'
+  '<<"'  ->  ' << "|" '
+  '<<;'  ->  ' << "|\n";'
+  '>>'   ->  ' >> |'
 <
-Copy this file to ~/.vim/ftplugin and rename it to 'cpp.vim'.
+Copy the files 'c-support/rc/c.vim' or 'c-support/rc/cpp.vim'
+to '~/.vim/ftplugin'.
 
 ==============================================================================
 10.  WINDOWS PARTICULARITIES                                *csupport-windows*
